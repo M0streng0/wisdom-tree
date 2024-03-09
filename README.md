@@ -1,3 +1,5 @@
+# Wisdom Tree & Bonsai.sh
+
 <p align="center">
 
 [![Downloads](https://pepy.tech/badge/wisdom-tree)](https://pepy.tech/project/wisdom-tree)
@@ -6,7 +8,7 @@
 
 </p>
 
-This fork is an implementation of both [bonsai.sh](https://gitlab.com/jallbrit/bonsai.sh) and [https://github.com/HACKER097/wisdom-tree](Wisdom Tree)
+This fork is an implementation of both [bonsai.sh](https://gitlab.com/jallbrit/bonsai.sh) and [Wisdom Tree](https://github.com/HACKER097/wisdom-tree)
 
 # Showcase
 
