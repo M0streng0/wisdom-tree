@@ -1,5 +1,3 @@
-<h3 align="center"><img src="wisdom_tree/res/logo_512x512.png" alt="wisdom-tree"><br>Wisdom Tree</h3>
-
 <p align="center">
 
 [![Downloads](https://pepy.tech/badge/wisdom-tree)](https://pepy.tech/project/wisdom-tree)
@@ -8,20 +6,21 @@
 
 </p>
 
-Wisdom Tree is a tui concentration app. Inspired by the wisdom tree in Plants vs. Zombies which gives in-game tips when it grows, Wisdom Tree gives you real life tips when it grows. How can you grow the tree? by concentrating!
+This fork is an implementation of both [bonsai.sh](https://gitlab.com/jallbrit/bonsai.sh) and [https://github.com/HACKER097/wisdom-tree](Wisdom Tree)
 
 # Showcase
-https://user-images.githubusercontent.com/38581702/235925233-1abe0e76-da53-41a7-9219-48686aab879c.mp4
 
+NOT YET
 
 # Screenshots
-![alt text](https://imgur.com/nFw46EN.png)
-![alt text](https://imgur.com/Q1rGccM.png)
-![alt text](https://imgur.com/VvRaLYd.png)
-![alt text](https://imgur.com/MJCkdMb.png)
 
+NOT YET
 
-# Installation
+# Wisdom Tree
+
+Wisdom Tree is a tui concentration app. Inspired by the wisdom tree in Plants vs. Zombies which gives in-game tips when it grows, Wisdom Tree gives you real life tips when it grows. How can you grow the tree? by concentrating!
+
+## Installation
 
 Wisdom-tree uses vlc to play music, please make sure vlc is installed. 
 
@@ -29,16 +28,19 @@ Extra step for mac `brew install sdl2_mixer`
 
 Extra step for Windows `pip install windows-curses` or `pipx inject wisdom-tree windows-curses`
 
-## Installation from PyPi
+### Installation from PyPi
+
 `pip install wisdom-tree` or `pip3 install wisdom-tree`
 
-## Installation using [pipx](https://pypa.github.io/pipx/)
+### Installation using [pipx](https://pypa.github.io/pipx/)
+
 `pipx install wisdom-tree`
 
 This allows you to run the app from anywhere
 
-## Installation From Github
-`git clone https://github.com/HACKER097/wisdom-tree`
+### Installation From Github
+
+`git clone https://github.com/M0streng0/wisdom-tree`
 
 `cd wisdom-tree`
 
@@ -46,10 +48,7 @@ This allows you to run the app from anywhere
 or
 `pip3 install -r requirements.txt`
 
-
-
-## Running the app
-
+### Running the app
 
 - From anywhere after installation from PyPi or using pipx
 
@@ -65,8 +64,7 @@ or
 
 `wisdom-tree`
 
-
-# Usage
+## Usage
 
 Use `left` and `right` arrow keys to change music
 
@@ -96,7 +94,7 @@ number keys `0-9` to go 0-90% into the audio. Eg; pressing 6 will take you 60% i
 
 To exit press `q`
 
-## Custom quotes
+### Custom quotes
 
 The user can use any set of quotes by adding a file called `qts.txt` with
 one qoute per line to the default config location:
@@ -112,7 +110,7 @@ for the operating system:
 *for now, adding a custom quotes file disables the default quotes*
 
 
-# Features
+## Features
 
 Wisdom tree plays a variety of music, environmental sounds and white noises to help you concentrate. You can also import your own music into Wisdom Tree.
 
@@ -126,21 +124,16 @@ Play music from youtube
 
 Lo-Fi radio
 
-# Upcoming Features
+# Bonsai.sh
 
-~~Play music from youtube~~
+bonsai.sh is a bonsai tree generator for the terminal, written entirely in bash. It intelligently creates, colors, and positions the tree. My version is a modification of the original.
 
-~~Lo-Fi radio~~
+## Installation
 
-If you would like to see a feature implemented, please open an issue with tag [FEATURE REQUEST]
+Not necessary, just runnig the bash script.
 
-# Tipping 
+## Usage
 
-Before you consider donating, please note that I am still a school student and code in my free time, donating **will not** help me work on wisdom-tree or my other projects faster. Your tip can end up on onlycoins at worst, or pay for my college tuition at best.
+Run the command `./tree_generator.sh` to start the script to create all the necessary steps for later use with wisdom tree.
 
-
-
-Monero:- 
-
-`42hk7SW7mdM5JXYRLAaiD47bqchNGfXJ8aQGhuQJuF9cTBhC5w94aUEcxt7NfokV2URy78RgSXdbiUGYCQZsPFjqDfi7Lto`
-
+This code is going to generate `n` files, depending on the number of the steps for generating the bonsai tree. Each step corresponds to a year (within Wisdom Tree) of age.

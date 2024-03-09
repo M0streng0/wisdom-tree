@@ -218,3 +218,4 @@ ENV/
 
 # user tree data, we don't need to have this included in the repo, it will be generated upon starting.
 wisdom_tree/res/treedata
+wisdom_tree/res/steps

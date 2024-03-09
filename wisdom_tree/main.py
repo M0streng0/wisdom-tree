@@ -14,6 +14,7 @@ import vlc
 os.environ['VLC_VERBOSE'] = '-1'
 
 RES_FOLDER = Path(__file__).parent / "res"
+STEPS_FOLDER = Path(__file__).parent / "res" / "steps"
 QUOTE_FOLDER = Path(__file__).parent
 QUOTE_FILE_NAME = "qts.txt"
 QUOTE_FILE = QUOTE_FOLDER / QUOTE_FILE_NAME
@@ -36,7 +37,7 @@ TIMER_BREAK = (
 SOUNDS_MUTED = False # This is for only growth and start_timer, alarm stays
 TIMER_START_SOUND = str(RES_FOLDER / "timerstart.wav")
 ALARM_SOUND = str(RES_FOLDER / "alarm.wav")
-GROWTH_SOUND = str(RES_FOLDER/ "growth.waw")
+GROWTH_SOUND = str(RES_FOLDER/ "growth.wav")
 
 effect_volume = 100 # How loud sound effects are, not including ambience and music.
 
@@ -68,7 +69,6 @@ def play_sound(sound):
         return
 
     media = vlc.MediaPlayer(sound)
-    media.audio_set_volume(effect_volume)
     media.play()
 
 def toggle_sounds():
@@ -124,20 +124,52 @@ def getqt():  # returns random quote
     return getrandomline(QUOTE_FILE)
 
 
-def printart(
-    stdscr, file, x, y, color_pair
-):  # prints line one by one to display text art, also in the middle
+def printart(stdscr, file, x, y):
+    color_map = {
+        '\x1b[38;5;172m': 1,  # Brown
+        '\x1b[38;5;130m': 2,  # Dark Brown
+        '\x1b[38;5;142m': 3, # Dark Green
+        '\x1b[38;5;106m': 4, # Green
+        '\x1b[38;5;243m': 5, # Gray
+        # '\x1b(B\x1b[m': 0,    # Reset to default
+    }
+
     with open(file, "r", encoding="utf8") as f:
-        lines = f.readlines()
+        lines = [line for line in f if line.strip()]
+        min_leading_spaces = min(len(line) - len(line.lstrip(' ')) for line in lines)
 
-        for i in range(len(lines)):
-            stdscr.addstr(
-                y + i - len(lines),
-                x - int(len(max(lines, key=len)) / 2),
-                lines[i],
-                curses.color_pair(color_pair),
-            )
+        lines = [line[min_leading_spaces:] if line.startswith(' ' * min_leading_spaces) else line for line in lines]
 
+        for ansi_code, color_id in color_map.items():
+            lines = [line.replace('\x1b(B\x1b[m', '') for line in lines]
+            lines = [line.replace(ansi_code, str(color_id)) for line in lines]
+        
+        color_id_order = []
+        for line in lines:
+            for character in line:
+                if character == "1":
+                    color_id_order.append(8)
+                elif character == "2":
+                    color_id_order.append(9)
+                elif character == "3":
+                    color_id_order.append(10)
+                elif character == "4":
+                    color_id_order.append(11)
+                elif character == "5":
+                    color_id_order.append(12)
+        
+        for ansi_code, color_id in color_map.items():
+            lines = [line.replace(str(color_id), '') for line in lines]
+
+        for i, line in enumerate(lines):
+            x_offset = x - int(len(max(lines, key=len)) / 2)
+            for j, char in enumerate(line):
+                if char in '&/\\_|~':
+                    color_id = color_id_order.pop(0)
+                    color_id_order.append(color_id)
+                    stdscr.addstr(y + i - len(lines), x_offset + j, char, curses.color_pair(color_id))
+                else:
+                    stdscr.addstr(y + i - len(lines), x_offset + j, char)
 
 def key_events(stdscr, tree1, maxx):
 
@@ -417,26 +449,21 @@ class tree:
 
 
     def display(self, maxx, maxy, seconds):
-        if self.age >= 1 and self.age < 5:
-            self.artfile = str(RES_FOLDER/"p1.txt")
-        if self.age >= 5 and self.age < 10:
-            self.artfile = str(RES_FOLDER/"p2.txt")
-        if self.age >= 10 and self.age < 20:
-            self.artfile = str(RES_FOLDER/"p3.txt")
-        if self.age >= 20 and self.age < 30:
-            self.artfile = str(RES_FOLDER/"p4.txt")
-        if self.age >= 30 and self.age < 40:
-            self.artfile = str(RES_FOLDER/"p5.txt")
-        if self.age >= 40 and self.age < 70:
-            self.artfile = str(RES_FOLDER/"p6.txt")
-        if self.age >= 70 and self.age < 120:
-            self.artfile = str(RES_FOLDER/"p7.txt")
-        if self.age >= 120 and self.age < 200:
-            self.artfile = str(RES_FOLDER/"p8.txt")
-        if self.age >= 200:
-            self.artfile = str(RES_FOLDER/"p9.txt")
+        # Get the list of all p*.txt files in the STEPS_FOLDER
+        pattern = "p*.txt"
+        files = list(STEPS_FOLDER.glob(pattern))
+        
+        # Extract numbers from filenames and find the maximum available
+        max_available = max([int(f.stem[1:]) for f in files]) if files else 1
+        
+        # Determine the correct file number based on age
+        file_number = min(self.age, max_available)
+        file_name = f"p{file_number}.txt"
+        
+        # Update the artfile attribute
+        self.artfile = str(STEPS_FOLDER / file_name)
 
-        printart(self.stdscr, self.artfile, int(maxx / 2), int(maxy * 3 / 4), 1)
+        printart(self.stdscr, self.artfile, int(maxx / 2), int(maxy * 3 / 4))
         addtext(
             int(maxx / 2),
             int(maxy * 3 / 4),
@@ -452,8 +479,6 @@ class tree:
         random.seed(
             int(seconds / speed)
         )  # this keeps the seed same for some time, so rains looks like its going slowly
-
-        # printart(self.stdscr, 'res/rain1.txt', int(maxx/2), int(maxy*3/4), 4)
         for i in range(intensity):
             ry = random.randrange(int(maxy * 1 / 4), int(maxy * 3 / 4))
             rx = random.randrange(int(maxx / 3), int(maxx * 2 / 3))
@@ -855,6 +880,11 @@ def main():
         curses.init_pair(5, 15, -1)
         curses.init_pair(6, 1, -1)
         curses.init_pair(7, curses.COLOR_YELLOW, -1)
+        curses.init_pair(8, 172, -1) # Brown
+        curses.init_pair(9, 130, -1) # Dark Brown
+        curses.init_pair(10, 142, -1) # Green
+        curses.init_pair(11, 106, -1) # Dark Green
+        curses.init_pair(12, 8, -1) # Gray
 
     except:
         curses.init_pair(1, 1, 0)  # passive selected text inner, outer
